@@ -10,6 +10,7 @@ from .OptimTrainer import OptimTrainer
 import torch
 from enum import Enum
 import numpy as np
+from pathlib import Path
 
 from ariadne import cache_directory
 from ariadne.classifier import Classifier
@@ -239,8 +240,8 @@ class BertClassifier(Classifier):
     labels = None
     trained_docs = []
 
-    def __init__(self, model_name, labels):
-        super().__init__()
+    def __init__(self, model_directory: Path, model_name: str, labels: List[str]):
+        super().__init__(model_directory=model_directory)
         self.tokenizer = CachedTokenizer(model_name).get_tokenizer()
         self.model_name = model_name
         self.labels = labels
@@ -249,7 +250,7 @@ class BertClassifier(Classifier):
         logger.debug("Start training for user [%s]", user_id)
         model = self._load_model(user_id)
         if model is None:
-            logger.debug("No trained model ready yet!")
+            logger.debug("No trained model ready yet, loading expert-finetuned model ..")
             # is user has not annotated yet, load fine-tuned model (should happen only once in the beginning)
             model = self._load_model("twitter_opinion_bert_finetuned")
 
