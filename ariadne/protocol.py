@@ -1,5 +1,5 @@
 from typing import Dict, Any, List
-
+import json
 import attr
 import cassis
 
@@ -67,6 +67,8 @@ def parse_prediction_request(json_object: JsonDict) -> PredictionRequest:
     cas = load_cas_from_xmi(document["xmi"], typesystem)
     document_id = document["documentId"]
     user_id = document["userId"]
+    with open("/ukp-storage-1/beck/Data/inception-recommenders/requests/sample_request.json", "w") as fp:
+        json.dump(json_object, fp)
 
     return PredictionRequest(cas, layer, feature, project_id, document_id, user_id)
 
